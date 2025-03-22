@@ -6,7 +6,7 @@ import EditPost from './components/post/EditPost.vue';
 import MetaList from './components/meta/MetaList.vue';
 
 const routes = [
-  { path: '/', component: PostList },
+  { path: '/post', component: PostList },
   { path: '/post/new', component: CreatePost },
   { path: '/post/edit/:id', component: EditPost, props: true },
   { path: "/meta/new", component: MetaForm },
