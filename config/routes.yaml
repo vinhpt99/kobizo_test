@@ -30,4 +30,24 @@ update_post:
    controller: App\Controller\PostController::updatePost
    methods: PUT
 
+create_meta:
+   path: /api/meta
+   controller: App\Controller\MetaController::createMeta
+   methods: POST
+
+list_meta:
+   path: /api/meta
+   controller: App\Controller\MetaController::getAllMeta
+   methods: GET
+
+get_meta:
+   path: /api/meta/{id}
+   controller: App\Controller\MetaController::getMeta
+   methods: GET
+
+update_meta:
+   path: /api/meta/{id}
+   controller: App\Controller\MetaController::updateMeta
+   methods: PUT
+
 
