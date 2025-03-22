@@ -22,7 +22,12 @@ class PostController extends AbstractController
         return new JsonResponse(array_map(fn($p) => [
             'id' => $p->getId(),
             'title' => $p->getTitle(),
-            'content' => $p->getContent()
+            'content' => $p->getContent(),
+            'metas' => array_map(fn($meta) => [
+                'id' => $meta->getId(),
+                'key' => $meta->getMetaKey(),
+                'value' => $meta->getValue(),
+            ], $p->getMetas()->toArray())
         ], $posts));
     }
 
