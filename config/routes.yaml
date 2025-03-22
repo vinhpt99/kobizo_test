@@ -1,3 +1,33 @@
+app_frontend:
+    path: /{vueRouting}
+    controller: Symfony\Bundle\FrameworkBundle\Controller\TemplateController::templateAction
+    defaults:
+        template: 'base.html.twig'
+    requirements:
+        vueRouting: "^(?!api).+" # Bỏ qua các route API
+
 index:
    path: /
    controller: App\Controller\DefaultController::index
+
+create:
+   path: /api/posts
+   controller: App\Controller\PostController::create
+   methods: POST
+
+get_post:
+   path: /api/posts/{id}
+   controller: App\Controller\PostController::getPost
+   methods: GET
+
+get_all_posts:
+   path: /api/posts
+   controller: App\Controller\PostController::getAllPosts
+   methods: GET
+
+update_post:
+   path: /api/posts/{id}
+   controller: App\Controller\PostController::updatePost
+   methods: PUT
+
+

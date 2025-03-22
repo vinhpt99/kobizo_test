@@ -6,12 +6,12 @@ services:
     working_dir: /var/www/html
     volumes:
       - .:/var/www/html
-    command: ["sh", "-c", "composer install && npm install && npm run build && php-fpm"]
+    command: ["sh", "-c", "php-fpm"] 
     depends_on:
       - mysql
-    environment:
-      - DATABASE_URL=mysql://root:root@mysql:3306/symfony_db
-
+    env_file:
+      - .env
+      
   nginx:
     image: nginx:latest
     container_name: symfony_nginx

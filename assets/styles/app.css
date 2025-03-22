@@ -1,3 +1,13 @@
 body {
-    background-color: lightgray;
+    /* background-color: lightgray; */
+}
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 2px;
 }
