@@ -1,15 +1,13 @@
 <template>
   <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav v-if="isAuthenticated" class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Admin Panel</a>
-
         <!-- Nút Toggle khi màn hình nhỏ -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-
         <!-- Danh sách menu -->
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
@@ -29,14 +27,33 @@
         </div>
       </div>
     </nav>
-
     <router-view />
   </div>
 </template>
 
 <script>
+import apiClient from './auth';
+
 export default {
   name: "App",
+  data() {
+    return {
+      isAuthenticated: false,
+    };
+  },
+  mounted() {
+    this.checkAuth();
+  },
+  methods: {
+    async checkAuth() {
+      try {
+        await apiClient.get("/check-auth");
+        this.isAuthenticated = true;
+      } catch (error) {
+        this.isAuthenticated = false;
+      }
+    },
+  },
 };
 </script>
 
