@@ -23,6 +23,9 @@
             <li class="nav-item">
               <router-link to="/meta/new" class="nav-link">Create Meta</router-link>
             </li>
+            <li class="nav-item">
+              <a href="/rss-reader">Rss Reader</a>
+            </li>
           </ul>
         </div>
       </div>
