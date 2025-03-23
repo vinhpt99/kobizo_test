@@ -1,14 +1,17 @@
 <template>
   <div class="container">
-    <nav v-if="isAuthenticated" class="navbar navbar-expand-lg navbar-light bg-light">
+    <div v-if="isLoading" class="loading-container">
+      <span class="spinner-border text-primary" role="status"></span>
+      <p>Loading...</p>
+    </div>
+
+    <nav v-else-if="isAuthenticated" class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">Admin Panel</a>
-        <!-- Nút Toggle khi màn hình nhỏ -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
           aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <!-- Danh sách menu -->
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
@@ -23,7 +26,7 @@
             <li class="nav-item">
               <router-link to="/meta/new" class="nav-link">Create Meta</router-link>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" style="display: flex; align-items: center;">
               <a href="/rss-reader">Rss Reader</a>
             </li>
           </ul>
@@ -42,10 +45,11 @@ export default {
   data() {
     return {
       isAuthenticated: false,
+      isLoading: true, // Thêm trạng thái loading
     };
   },
-  mounted() {
-    this.checkAuth();
+  async mounted() {
+    await this.checkAuth();
   },
   methods: {
     async checkAuth() {
@@ -54,6 +58,8 @@ export default {
         this.isAuthenticated = true;
       } catch (error) {
         this.isAuthenticated = false;
+      } finally {
+        this.isLoading = false;
       }
     },
   },
@@ -63,5 +69,15 @@ export default {
 <style>
 .navbar {
   margin-bottom: 20px;
+}
+
+.loading-container {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
 }
 </style>
