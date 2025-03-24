@@ -16,7 +16,7 @@
       <tbody>
         <tr v-for="meta in metaList" :key="meta.id">
           <td>{{ meta.id }}</td>
-          <td>{{ meta.meta_key }}</td> 
+          <td>{{ meta.meta_key }}</td>
           <td>{{ meta.value }}</td>
           <td>{{ meta.post_title }}</td>
           <td>
@@ -35,6 +35,7 @@
 <script>
 import axios from "axios";
 import MetaForm from "./MetaForm.vue";
+import { eventBus } from "../../eventBus"; // Import Event Bus
 
 export default {
   components: { MetaForm },
@@ -50,31 +51,27 @@ export default {
   },
   methods: {
     async fetchMetaList() {
+      eventBus.emit("loading", true);
       try {
         const response = await axios.get("/api/meta");
         this.metaList = response.data;
       } catch (error) {
         console.error("Error fetching meta list:", error);
+      } finally {
+        eventBus.emit("loading", false);
       }
     },
     editMeta(metaId) {
       this.selectedMetaId = metaId;
       this.showForm = true;
     },
-    async deleteMeta(metaId) {
-      if (!confirm("Are you sure you want to delete this meta?")) return;
-      try {
-        await axios.delete(`/api/meta/${metaId}`);
-        this.fetchMetaList();
-      } catch (error) {
-        console.error("Error deleting meta:", error);
-      }
-    },
     closeForm() {
       this.showForm = false;
       this.selectedMetaId = null;
-      this.fetchMetaList(); 
+      this.fetchMetaList();
     },
   },
 };
 </script>
+
+<style></style>

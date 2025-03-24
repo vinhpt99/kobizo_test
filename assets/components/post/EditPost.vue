@@ -20,28 +20,48 @@
         </select>
       </div>
 
-      <button type="submit" class="btn btn-success">Update</button>
+      <button type="submit" class="btn btn-success" :disabled="isLoading">
+        {{ isLoading ? "Updating..." : "Update" }}
+      </button>
     </form>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import { eventBus } from "./../../eventBus"; 
 
 export default {
   props: ["id"],
   data() {
-    return { post: { title: "", content: "" } };
+    return {
+      post: { title: "", content: "", status: "draft" },
+      isLoading: false,
+    };
   },
   async mounted() {
-    const response = await axios.get(`/api/posts/${this.id}`);
-    this.post = response.data;
+    eventBus.emit("loading", true);
+    try {
+      const response = await axios.get(`/api/posts/${this.id}`);
+      this.post = response.data;
+    } catch (error) {
+      console.error("Failed to fetch post", error);
+    } finally {
+      eventBus.emit("loading", false);
+    }
   },
   methods: {
     async updatePost() {
-      await axios.put(`/api/posts/${this.id}`, this.post);
-      this.$router.push('/');
-    }
-  }
+      eventBus.emit("loading", true);
+      try {
+        await axios.put(`/api/posts/${this.id}`, this.post);
+        alert("Post updated successfully");
+      } catch (error) {
+        console.error("Failed to update post", error);
+      } finally {
+        eventBus.emit("loading", false);
+      }
+    },
+  },
 };
 </script>

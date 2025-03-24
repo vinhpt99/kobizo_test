@@ -37,13 +37,16 @@
 
 <script>
 import axios from 'axios';
+import { eventBus } from "./../../eventBus"; 
 
 export default {
   data() {
     return { posts: [] };
   },
   async mounted() {
+    eventBus.emit("loading", true);
     const response = await axios.get('/api/posts');
+    eventBus.emit("loading", false);
     this.posts = response.data;
   }
 };

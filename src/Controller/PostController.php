@@ -16,6 +16,7 @@ use Doctrine\DBAL\Exception as DBALException;
 class PostController extends AbstractController
 {
     //get all
+    #[Route('/api/posts', name: 'get_all_posts', methods: ['GET'])]
     public function getAllPosts(EntityManagerInterface $em): JsonResponse
     {
         $posts = $em->getRepository(Post::class)->findAll();
@@ -32,6 +33,7 @@ class PostController extends AbstractController
     }
 
     //get post
+    #[Route('/api/posts/{id}', name: 'get_post', methods: ['GET'])]
     public function getPost($id, EntityManagerInterface $em): JsonResponse
     {
         $post = $em->getRepository(Post::class)->find($id);
@@ -44,6 +46,7 @@ class PostController extends AbstractController
         ]);
     }
 
+    #[Route('/api/posts', name: 'create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -67,7 +70,7 @@ class PostController extends AbstractController
         return $this->json(['message' => 'Post created successfully', 'id' => $post->getId()]);
     }
 
-
+    #[Route('/api/posts/{id}', name: 'update_post', methods: ['PUT'])]
     public function updatePost($id, Request $request, EntityManagerInterface $em): JsonResponse
     {
         $post = $em->getRepository(Post::class)->find($id);

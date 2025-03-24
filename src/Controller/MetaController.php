@@ -14,6 +14,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 class MetaController extends AbstractController
 {
   // GET ALL Meta
+  #[Route('/api/meta', name: 'list_meta', methods: ['GET'])]
   public function getAllMeta(EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
   {
     $metaList = $em->getRepository(Meta::class)->findAll();
@@ -26,6 +27,7 @@ class MetaController extends AbstractController
   }
 
   // GET Meta by ID
+  #[Route('/api/meta/{id}', name: 'get_meta', methods: ['GET'])]
   public function getMeta($id, EntityManagerInterface $em, SerializerInterface $serializer): JsonResponse
   {
     $meta = $em->getRepository(Meta::class)->find($id);
@@ -39,6 +41,7 @@ class MetaController extends AbstractController
   }
 
   // CREATE Meta
+  #[Route('/api/meta', name: 'create_meta', methods: ['POST'])]
   public function createMeta(Request $request, EntityManagerInterface $em): JsonResponse
   {
     $data = json_decode($request->getContent(), true);
@@ -47,7 +50,7 @@ class MetaController extends AbstractController
     if (!$post) return new JsonResponse(['error' => 'Post not found'], 404);
 
     $meta = new Meta();
-    $meta->setMetaKey($data['key']);
+    $meta->setMetaKey($data['meta_key']);
     $meta->setValue($data['value']);
     $meta->setPost($post);
 
@@ -58,6 +61,7 @@ class MetaController extends AbstractController
   }
 
   // UPDATE Meta
+  #[Route('/api/meta/{id}', name: 'update_meta', methods: ['PUT'])]
   public function updateMeta($id, Request $request, EntityManagerInterface $em): JsonResponse
   {
     $data = json_decode($request->getContent(), true);
@@ -71,5 +75,4 @@ class MetaController extends AbstractController
     $em->flush();
     return new JsonResponse(['message' => 'Meta updated successfully']);
   }
-
 }

@@ -15,39 +15,6 @@ create:
    controller: App\Controller\PostController::create
    methods: POST
 
-get_post:
-   path: /api/posts/{id}
-   controller: App\Controller\PostController::getPost
-   methods: GET
 
-get_all_posts:
-   path: /api/posts
-   controller: App\Controller\PostController::getAllPosts
-   methods: GET
-
-update_post:
-   path: /api/posts/{id}
-   controller: App\Controller\PostController::updatePost
-   methods: PUT
-
-create_meta:
-   path: /api/meta
-   controller: App\Controller\MetaController::createMeta
-   methods: POST
-
-list_meta:
-   path: /api/meta
-   controller: App\Controller\MetaController::getAllMeta
-   methods: GET
-
-get_meta:
-   path: /api/meta/{id}
-   controller: App\Controller\MetaController::getMeta
-   methods: GET
-
-update_meta:
-   path: /api/meta/{id}
-   controller: App\Controller\MetaController::updateMeta
-   methods: PUT
 
 

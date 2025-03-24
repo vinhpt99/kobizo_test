@@ -27,6 +27,7 @@
 
 <script>
 import axios from 'axios';
+import { eventBus } from "./../../eventBus"; 
 
 export default {
   data() {
@@ -36,8 +37,10 @@ export default {
   },
   methods: {
     async submitPost() {
+      eventBus.emit("loading", true);
       await axios.post('/api/posts', this.post);
-      this.$router.push('/');
+      eventBus.emit("loading", false);
+      alert("Post created successfully");
     }
   }
 };

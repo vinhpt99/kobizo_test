@@ -2,7 +2,6 @@
   <div class="container">
     <div v-if="isLoading" class="loading-container">
       <span class="spinner-border text-primary" role="status"></span>
-      <p>Loading...</p>
     </div>
 
     <nav v-else-if="isAuthenticated" class="navbar navbar-expand-lg navbar-light bg-light">
@@ -38,28 +37,37 @@
 </template>
 
 <script>
-import apiClient from './auth';
+import apiClient from "./auth";
+import { eventBus } from "./eventBus";
 
 export default {
   name: "App",
   data() {
     return {
       isAuthenticated: false,
-      isLoading: true, // Thêm trạng thái loading
+      isLoading: true,
     };
   },
-  async mounted() {
-    await this.checkAuth();
+  mounted() {
+    this.checkAuth();
+    // Lắng nghe sự kiện loading từ eventBus
+    eventBus.on("loading", (status) => {
+      this.isLoading = status;
+    });
+  },
+  beforeUnmount() {
+    eventBus.off("loading");
   },
   methods: {
     async checkAuth() {
       try {
+        eventBus.emit("loading", true);
         await apiClient.get("/check-auth");
         this.isAuthenticated = true;
       } catch (error) {
         this.isAuthenticated = false;
       } finally {
-        this.isLoading = false;
+        eventBus.emit("loading", false);
       }
     },
   },
@@ -67,17 +75,16 @@ export default {
 </script>
 
 <style>
-.navbar {
-  margin-bottom: 20px;
-}
-
 .loading-container {
-  text-align: center;
-  margin-top: 50px;
-}
-
-.spinner-border {
-  width: 3rem;
-  height: 3rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
 }
 </style>

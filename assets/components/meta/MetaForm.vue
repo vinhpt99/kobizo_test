@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <h2>{{ isEditing ? "Edit Meta" : "Create Meta" }}</h2>
+
     <form @submit.prevent="saveMeta">
       <div class="mb-3">
         <label class="form-label">Key</label>
@@ -21,8 +22,8 @@
         </select>
       </div>
 
-      <button type="submit" class="btn btn-primary">
-        {{ isEditing ? "Update" : "Save" }}
+      <button type="submit" class="btn btn-primary" :disabled="isLoading">
+        {{ isLoading ? "Saving..." : isEditing ? "Update" : "Save" }}
       </button>
     </form>
   </div>
@@ -30,11 +31,9 @@
 
 <script>
 import axios from "axios";
+import { eventBus } from "../../eventBus"; // Import Event Bus
 
 export default {
-  mounted() {
-    this.fetchPosts();
-  },
   props: {
     metaId: {
       type: Number,
@@ -43,27 +42,32 @@ export default {
   },
   data() {
     return {
-      meta: {
-        key: "",
-        value: "",
-      },
+      meta: { meta_key: "", value: "", post_id: null },
       isEditing: false,
       posts: [],
+      isLoading: false,
     };
   },
   async created() {
-    if (this.metaId) {
-      this.isEditing = true;
-      try {
+    eventBus.emit("loading", true);
+    try {
+      await this.fetchPosts();
+
+      if (this.metaId) {
+        this.isEditing = true;
         const response = await axios.get(`/api/meta/${this.metaId}`);
         this.meta = response.data;
-      } catch (error) {
-        console.error("Error fetching meta:", error);
       }
+    } catch (error) {
+      console.error("Error fetching meta:", error);
+    } finally {
+      eventBus.emit("loading", false);
     }
   },
   methods: {
     async saveMeta() {
+      eventBus.emit("loading", true);
+      this.isLoading = true;
       try {
         if (this.isEditing) {
           await axios.put(`/api/meta/${this.metaId}`, this.meta);
@@ -72,8 +76,12 @@ export default {
           await axios.post("/api/meta", this.meta);
           alert("Meta created successfully");
         }
+        this.$router.push("/meta");
       } catch (error) {
         console.error("Error saving meta:", error);
+      } finally {
+        eventBus.emit("loading", false);
+        this.isLoading = false;
       }
     },
     async fetchPosts() {
