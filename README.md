@@ -1,0 +1,4 @@
+- docker-compose up -d
+- docker exec -it symfony_php composer install
+- docker exec -it symfony_php php bin/console doctrine:migrations:diff
+- docker exec -it symfony_php php bin/console doctrine:migrations:migrate
